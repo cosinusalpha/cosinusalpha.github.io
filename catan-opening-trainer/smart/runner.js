@@ -12,6 +12,7 @@ export async function runGame(engine, request, cancelled, progress) {
     return value;
   };
   let result = call({op: "begin", seed: request.seed,
+    dice_mode: request.dice_mode,
     max_turns: request.max_turns, max_actions: request.max_actions, compact: true});
   let lastProgress = started;
   const channel = new MessageChannel();

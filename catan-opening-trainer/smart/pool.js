@@ -53,6 +53,7 @@ export class EnginePool {
         while (!state.cancelled && state.next < request.jobs.length) {
           const job = request.jobs[state.next++];
           const result = await this.call(slot, {op: "run", ...job,
+            dice_mode: request.dice_mode,
             max_turns: request.max_turns, max_actions: request.max_actions}, progress => {
             const now = performance.now();
             if (!state.cancelled && now - state.lastProgress >= 200) {
