@@ -1,10 +1,10 @@
-// This lightweight coordinator owns at most two compute workers. Their models
+// This lightweight coordinator owns up to four compute workers. Their models
 // survive successive batches; one is also reused for the AI's opening moves.
 export class EnginePool {
   constructor({createWorker = () => new Worker(new URL("./worker.js", import.meta.url), {type: "module"}),
                cores = globalThis.navigator?.hardwareConcurrency ?? 1} = {}) {
     this.createWorker = createWorker;
-    this.limit = cores >= 4 ? 2 : 1;
+    this.limit = cores < 4 ? 1 : Math.min(4, Math.floor(cores / 2));
     this.workers = [];
     this.nextId = 0;
     this.active = null;

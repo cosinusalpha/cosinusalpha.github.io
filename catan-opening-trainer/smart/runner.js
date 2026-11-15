@@ -1,5 +1,5 @@
 // A complete game stays inside its compute worker. Yield only to let cancellation
-// through; no Python/UI round trip is needed to advance the next eight actions.
+// through; no Python/UI round trip is needed between 24-action simulation slices.
 export async function runGame(engine, request, cancelled, progress) {
   const started = performance.now();
   let computeMs = 0;
@@ -25,7 +25,7 @@ export async function runGame(engine, request, cancelled, progress) {
       // MessageChannel yields without the nested-timer clamp on setTimeout.
       await yieldToMessages();
       if (cancelled()) return {cancelled: true};
-      result = call({op: "step", count: 8, compact: true});
+      result = call({op: "step", count: 24, compact: true});
       const now = performance.now();
       if (!result.done && now - lastProgress >= 200) {
         progress({turns: result.turns, actions: result.actions});

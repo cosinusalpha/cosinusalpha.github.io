@@ -5,9 +5,11 @@ import { runGame } from "./runner.js";
 let ready;
 function boot() {
   return ready ??= (async () => {
-    await init();
-    const metadataResponse = await fetch(new URL("./v89w.json", import.meta.url));
-    const modelResponse = await fetch(new URL("./v89w.bin", import.meta.url));
+    const [, metadataResponse, modelResponse] = await Promise.all([
+      init(),
+      fetch(new URL("./v89w.json", import.meta.url)),
+      fetch(new URL("./v89w.bin", import.meta.url)),
+    ]);
     if (!metadataResponse.ok || !modelResponse.ok) throw new Error("Could not load the v89w model");
     const metadata = await metadataResponse.json();
     const weights = new Uint8Array(await modelResponse.arrayBuffer());
